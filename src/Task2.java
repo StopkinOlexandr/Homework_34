@@ -47,7 +47,7 @@
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,11 +63,14 @@ public class Task2 {
       put("read", "r");
       put("execute", "x");
     }};
-    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    int n = Integer.parseInt(br.readLine());
+    File filesPath = new File("res/files.txt");
+    File operationsPath = new File("res/operations.txt");
+    File resultsPath = new File("res/results.txt");
+    BufferedReader inputFileReader = new BufferedReader(new FileReader(filesPath));
+    int n = Integer.parseInt(inputFileReader.readLine());
     for (int i = 0; i < n; ++i) {
       List<String> permissions = new ArrayList<>();
-      String row = br.readLine();
+      String row = inputFileReader.readLine();
       int sepPoz = row.indexOf(SEP);
       String filename = row.substring(0, sepPoz);
       do {
@@ -76,19 +79,27 @@ public class Task2 {
       } while (sepPoz < row.length());
       filePermission.put(filename, permissions);
     }
+    inputFileReader.close();
 
-    int m = Integer.parseInt(br.readLine());
+    BufferedReader inputOperationsReader = new BufferedReader(new FileReader(operationsPath));
+    FileWriter resultsWriter = new FileWriter(resultsPath);
+    int m = Integer.parseInt(inputOperationsReader.readLine());
     for (int i = 0; i < m; ++i) {
-      String row = br.readLine();
+      String row = inputOperationsReader.readLine();
       int sepPoz = row.indexOf(SEP);
       String operation = operConv.get(row.substring(0, sepPoz));
+      String operToCheck = operConv.get(operation).toUpperCase();
       String filename = row.substring(sepPoz + 1);
 
-      if (filePermission.get(filename).contains(operation)) {
-        System.out.printf("%s: %s: %s%n", filename, operation, "Ok");
+      if (filePermission.get(filename).contains(operToCheck)) {
+        String result = String.format ("%s: %s: %s%n", filename, operation, "Ok");
+        resultsWriter.write(result);
       } else {
-        System.out.printf("%s: %s: %s%n", filename, operation, "Access denied");
+        String result = String.format("%s: %s: %s%n", filename, operation, "Access denied") ;
+        resultsWriter.write(result);
       }
     }
+    inputOperationsReader.close();
+    resultsWriter.close();
   }
 }
