@@ -55,17 +55,15 @@ import java.util.Map;
 
 public class Task2 {
   public static final String SEP = " ";
+  public static Map<String, List<String>> filePermission = new HashMap<>();
+  public static Map<String, String> operConv = new HashMap<>() {{
+    put("write", "w");
+    put("read", "r");
+    put("execute", "x");
+  }};
+  public static List<List<String>> operationList = new ArrayList<>();
 
-  public static void main(String[] args) throws IOException {
-    Map<String, List<String>> filePermission = new HashMap<>();
-    Map<String, String> operConv = new HashMap<>() {{
-      put("write", "w");
-      put("read", "r");
-      put("execute", "x");
-    }};
-    File filesPath = new File("res/files.txt");
-    File operationsPath = new File("res/operations.txt");
-    File resultsPath = new File("res/results.txt");
+  public static void readFilesList(File filesPath) throws IOException {
     BufferedReader inputFileReader = new BufferedReader(new FileReader(filesPath));
     int n = Integer.parseInt(inputFileReader.readLine());
     for (int i = 0; i < n; ++i) {
@@ -80,26 +78,47 @@ public class Task2 {
       filePermission.put(filename, permissions);
     }
     inputFileReader.close();
+  }
 
+  public static void readOperations(File operationsPath) throws IOException {
     BufferedReader inputOperationsReader = new BufferedReader(new FileReader(operationsPath));
-    FileWriter resultsWriter = new FileWriter(resultsPath);
     int m = Integer.parseInt(inputOperationsReader.readLine());
     for (int i = 0; i < m; ++i) {
       String row = inputOperationsReader.readLine();
       int sepPoz = row.indexOf(SEP);
-      String operation = operConv.get(row.substring(0, sepPoz));
-      String operToCheck = operConv.get(operation).toUpperCase();
+      String operation = row.substring(0, sepPoz);
       String filename = row.substring(sepPoz + 1);
+      List<String> singleOperation = new ArrayList<>();
+      singleOperation.add(filename);
+      singleOperation.add(operation);
+      operationList.add(singleOperation);
+    }
+    inputOperationsReader.close();
+  }
 
+  public static void checkOperations(File resultsPath) throws IOException {
+    FileWriter resultsWriter = new FileWriter(resultsPath);
+    for (List<String> strings : operationList) {
+      String filename = strings.get(0);
+      String operation = strings.get(1);
+      String operToCheck = operConv.get(operation).toUpperCase();
       if (filePermission.get(filename).contains(operToCheck)) {
-        String result = String.format ("%s: %s: %s%n", filename, operation, "Ok");
+        String result = String.format("%s: %s: %s%n", filename, operation, "Ok");
         resultsWriter.write(result);
       } else {
-        String result = String.format("%s: %s: %s%n", filename, operation, "Access denied") ;
+        String result = String.format("%s: %s: %s%n", filename, operation, "Access denied");
         resultsWriter.write(result);
       }
     }
-    inputOperationsReader.close();
     resultsWriter.close();
+  }
+
+  public static void main(String[] args) throws IOException {
+    File filesPath = new File("res/files.txt");
+    File operationsPath = new File("res/operations.txt");
+    File resultsPath = new File("res/results.txt");
+    readFilesList(filesPath);
+    readOperations(operationsPath);
+    checkOperations(resultsPath);
   }
 }
