@@ -1,5 +1,7 @@
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 //Во всех задачах разбивайте решение на несколько коммитов:
@@ -64,8 +66,7 @@ public class Task1 {
   final public static String SEP = ": ";
   public static Map<String, String> dict = new HashMap<>();
 
-  public static void main(String[] args) throws IOException {
-    File dictPath = new File("res/dict.txt");
+  public static void readDict(File dictPath) throws IOException {
     BufferedReader inputFileReader = new BufferedReader(new FileReader(dictPath));
     int n = Integer.parseInt(inputFileReader.readLine());
     for (int i = 0; i < n; ++i) {
@@ -75,11 +76,27 @@ public class Task1 {
       String explanation = row.substring(sepPoz + SEP.length());
       dict.put(slang, explanation);
     }
+  }
+
+  public static List<String> inputSlangWords() throws IOException {
+    List<String> output = new ArrayList<>();
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    int m = Integer.parseInt(br.readLine());
-    for (int i = 0; i < m; ++i) {
-      String inputWord = br.readLine().toLowerCase();
-      System.out.println(dict.getOrDefault(inputWord, "Не найдено"));
+    int n = Integer.parseInt(br.readLine());
+    for (int i = 0; i < n; ++i) {
+      output.add(br.readLine().toLowerCase());
     }
+    return output;
+  }
+
+  public static void printExplanation(List<String> explanations) {
+    for (String explanation : explanations) {
+      System.out.println(dict.getOrDefault(explanation, "Не найдено"));
+    }
+  }
+
+  public static void main(String[] args) throws IOException {
+    File dictPath = new File("res/dict.txt");
+    readDict(dictPath);
+    printExplanation(inputSlangWords());
   }
 }
