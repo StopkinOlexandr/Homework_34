@@ -1,6 +1,4 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,18 +60,22 @@ import java.util.Map;
 //код, который нужен, чтобы исправить несовершенство ранее написанного кода
 
 public class Task1 {
+
   final public static String SEP = ": ";
+  public static Map<String, String> dict = new HashMap<>();
+
   public static void main(String[] args) throws IOException {
-    Map<String, String> dict = new HashMap<>();
-    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    int n = Integer.parseInt(br.readLine());
+    File dictPath = new File("res/dict.txt");
+    BufferedReader inputFileReader = new BufferedReader(new FileReader(dictPath));
+    int n = Integer.parseInt(inputFileReader.readLine());
     for (int i = 0; i < n; ++i) {
-      String row = br.readLine();
+      String row = inputFileReader.readLine();
       int sepPoz = row.indexOf(SEP);
       String slang = row.substring(0, sepPoz);
       String explanation = row.substring(sepPoz + SEP.length());
       dict.put(slang, explanation);
     }
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     int m = Integer.parseInt(br.readLine());
     for (int i = 0; i < m; ++i) {
       String inputWord = br.readLine().toLowerCase();
