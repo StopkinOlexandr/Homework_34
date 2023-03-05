@@ -82,9 +82,11 @@ public class Task1 {
     } catch (NumberFormatException e) {
       System.out.println("Invalid data format" + e.getMessage());
     } catch (EOFException e) {
-      System.out.println("Unexpexted end of file " + dictPath + e.getMessage());
+      System.out.println("Unexpected end of file " + dictPath + e.getMessage());
     } catch (IndexOutOfBoundsException e) {
-      System.out.println("Index negative or larger that string lenth" + e.getMessage());
+      System.out.println("Index negative or larger that string length" + e.getMessage());
+    } finally {
+      inputFileReader.close();
     }
   }
 
