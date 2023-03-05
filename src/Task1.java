@@ -1,3 +1,9 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
+
 //Во всех задачах разбивайте решение на несколько коммитов:
 //
 //условие в комментарии и никакого кода
@@ -5,6 +11,7 @@
 //добавляем файлы, если они указаны в задаче
 //разбиваем задачу на методы
 //добавляем try..catch
+
 
 // Задача 1
 //Программисты, как вы уже знаете, постоянно учатся, а в общении между собой используют весьма
@@ -53,3 +60,24 @@
 //язык программирования Python
 //Не найдено
 //код, который нужен, чтобы исправить несовершенство ранее написанного кода
+
+public class Task1 {
+  final public static String SEP = ": ";
+  public static void main(String[] args) throws IOException {
+    Map<String, String> dict = new HashMap<>();
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    int n = Integer.parseInt(br.readLine());
+    for (int i = 0; i < n; ++i) {
+      String row = br.readLine();
+      int sepPoz = row.indexOf(SEP);
+      String slang = row.substring(0, sepPoz);
+      String explanation = row.substring(sepPoz + SEP.length());
+      dict.put(slang, explanation);
+    }
+    int m = Integer.parseInt(br.readLine());
+    for (int i = 0; i < m; ++i) {
+      String inputWord = br.readLine().toLowerCase();
+      System.out.println(dict.getOrDefault(inputWord, "Не найдено"));
+    }
+  }
+}
