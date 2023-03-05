@@ -68,29 +68,47 @@ public class Task1 {
 
   public static void readDict(File dictPath) throws IOException {
     BufferedReader inputFileReader = new BufferedReader(new FileReader(dictPath));
-    int n = Integer.parseInt(inputFileReader.readLine());
-    for (int i = 0; i < n; ++i) {
-      String row = inputFileReader.readLine();
-      int sepPoz = row.indexOf(SEP);
-      String slang = row.substring(0, sepPoz);
-      String explanation = row.substring(sepPoz + SEP.length());
-      dict.put(slang, explanation);
+    try {
+      int n = Integer.parseInt(inputFileReader.readLine());
+      for (int i = 0; i < n; ++i) {
+        String row = inputFileReader.readLine();
+        int sepPoz = row.indexOf(SEP);
+        String slang = row.substring(0, sepPoz);
+        String explanation = row.substring(sepPoz + SEP.length());
+        dict.put(slang, explanation);
+      }
+    } catch (FileNotFoundException e) {
+      System.out.println("File '" + dictPath + "' not found" + e.getMessage());
+    } catch (NumberFormatException e) {
+      System.out.println("Invalid data format" + e.getMessage());
+    } catch (EOFException e) {
+      System.out.println("Unexpexted end of file " + dictPath + e.getMessage());
+    } catch (IndexOutOfBoundsException e) {
+      System.out.println("Index negative or larger that string lenth" + e.getMessage());
     }
   }
 
   public static List<String> inputSlangWords() throws IOException {
     List<String> output = new ArrayList<>();
-    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    int n = Integer.parseInt(br.readLine());
-    for (int i = 0; i < n; ++i) {
-      output.add(br.readLine().toLowerCase());
+    try {
+      BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+      int n = Integer.parseInt(br.readLine());
+      for (int i = 0; i < n; ++i) {
+        output.add(br.readLine().toLowerCase());
+      }
+    }catch (NumberFormatException e) {
+      System.out.println("Invalid data format" + e.getMessage());
     }
     return output;
   }
 
   public static void printExplanation(List<String> explanations) {
-    for (String explanation : explanations) {
-      System.out.println(dict.getOrDefault(explanation, "Не найдено"));
+    try {
+      for (String explanation : explanations) {
+        System.out.println(dict.getOrDefault(explanation, "Не найдено"));
+      }
+    }catch (NullPointerException e) {
+      System.out.println("Argument is NULL");
     }
   }
 
